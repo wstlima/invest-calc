@@ -1,5 +1,7 @@
 # Calculadora de Investimentos — Next.js + Route Handlers + SQLite (Prisma)
 
+![Aplicação](docs/app.png)
+
 Projeto de simulação e comparação entre **Renda Fixa** e **Renda Variável**, com persistência local (SQLite) e backend embutido no Next.js via Route Handlers.
 
 ## Stack
@@ -42,10 +44,12 @@ O app e a API são protegidos com **HTTP Basic Auth** via `src/middleware.ts`.
 - Usuário/senha vêm de `BASIC_AUTH_USER` e `BASIC_AUTH_PASS`.
 - Defaults: `admin/admin`.
 
+![Swagger UI](docs/swagger.png)
 ## Swagger (OpenAPI)
 - OpenAPI JSON: `GET /api/openapi`
 - Swagger UI: `GET /docs`
 
+![Rodando Testes](docs/test.png)
 ## Testes de integração
 Além dos testes unitários do core (`src/domain/**`), há testes de integração para as rotas:
 
