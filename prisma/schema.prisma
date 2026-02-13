@@ -1,0 +1,55 @@
+// Prisma schema
+
+generator client {
+	provider = "prisma-client-js"
+}
+
+datasource db {
+	provider = "sqlite"
+	url      = env("DATABASE_URL")
+}
+
+model Simulation {
+	id                   String   @id @default(cuid())
+	name                 String
+
+	initialAmount        Float
+	monthlyContribution  Float?
+	months               Int
+
+	fixedAnnualRate      Float?   // decimal (0.12 = 12%)
+	variableAnnualReturn Float?   // decimal
+	variableVolatility   Float?   // decimal (0.25 = 25%)
+
+	createdAt            DateTime @default(now())
+	updatedAt            DateTime @updatedAt
+
+	result               SimulationResult?
+}
+
+model SimulationResult {
+	id                 String   @id @default(cuid())
+	simulationId       String   @unique
+	simulation         Simulation @relation(fields: [simulationId], references: [id], onDelete: Cascade)
+
+	fixedSeriesJson      String
+	variableSeriesJson   String
+
+	fixedFinalGross      Float
+	fixedFinalNet        Float
+	variableFinalMean    Float
+
+	taxesJson            String   // {days,grossIncome,iofPercent,iof,irRate,ir,netIncome,finalNet}
+	metaJson             String   // {diffAbs,diffPercent,p10,p90,assumptions}
+
+	createdAt           DateTime @default(now())
+}
+
+model IdempotencyKey {
+	id           String   @id @default(cuid())
+	key          String   @unique
+	requestHash  String
+	simulationId String   @unique
+	createdAt    DateTime @default(now())
+}
+// Prisma schema

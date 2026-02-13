@@ -1,0 +1,18 @@
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    environment:
+      # Altere em produção
+      BASIC_AUTH_USER: ${BASIC_AUTH_USER:-admin}
+      BASIC_AUTH_PASS: ${BASIC_AUTH_PASS:-admin}
+      # Prisma/SQLite (persistido no volume)
+      DATABASE_URL: ${DATABASE_URL_DOCKER:-file:./data/dev.db}
+    volumes:
+      - app_data:/app/data
+
+volumes:
+  app_data:

@@ -1,0 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+
+/* Tailwind v4 entrypoint */
+@import "tailwindcss";
+
+/* Plugins */
+@plugin "@tailwindcss/forms";
+@plugin "@tailwindcss/typography";
+
+:root {
+	--font-sans: 'Inter', sans-serif;
+}
+body {
+	font-family: var(--font-sans);
+}
