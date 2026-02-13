@@ -1,0 +1,34 @@
+diff -ruN /mnt/data/calc_orig/src/domain/calculators/taxes.ts /mnt/data/calc_fix/src/domain/calculators/taxes.ts
+--- /mnt/data/calc_orig/src/domain/calculators/taxes.ts	2026-02-13 02:20:26.000000000 +0000
++++ /mnt/data/calc_fix/src/domain/calculators/taxes.ts	2026-02-13 02:40:27.292604893 +0000
+@@ -1,7 +1,9 @@
+ import { FixedIncomeTaxes } from "../types";
+ 
+ export function getIofPercent(days: number): number {
+-	if (days > 30) return 0;
++	// Enunciado: IOF incide sobre o rendimento nos primeiros 30 dias.
++	// Tabela do PDF: dia 29 = 12%, dia 30+ = 0% (isento).
++	if (days >= 30) return 0;
+ 	// Regra do enunciado: IOF% = 96 - ((dias - 1) * 3), até 30 dias.
+ 	// Ex.: dia 1 = 96, dia 10 = 69, dia 29 = 12, dia 30 = 0
+ 	const pct = 96 - (days - 1) * 3;
+diff -ruN /mnt/data/calc_orig/tests/setup.ts /mnt/data/calc_fix/tests/setup.ts
+--- /mnt/data/calc_orig/tests/setup.ts	2026-02-13 00:44:23.000000000 +0000
++++ /mnt/data/calc_fix/tests/setup.ts	2026-02-13 02:40:41.492887163 +0000
+@@ -5,10 +5,13 @@
+ // Test DB isolado
+ const TEST_DB = "/tmp/invest-calc.test.db";
+ 
+-beforeAll(() => {
+-	process.env.NODE_ENV = "test";
+-	process.env.DATABASE_URL = `file:${TEST_DB}`;
++// IMPORTANT: vitest `setupFiles` roda antes do carregamento dos arquivos de teste,
++// mas `beforeAll` roda depois. O PrismaClient pode ser instanciado durante o import
++// dos módulos (antes de `beforeAll`), então precisamos setar o DATABASE_URL aqui.
++process.env.NODE_ENV = "test";
++process.env.DATABASE_URL = `file:${TEST_DB}`;
+ 
++beforeAll(() => {
+ 	// garante DB limpo
+ 	try {
+ 		rmSync(TEST_DB);

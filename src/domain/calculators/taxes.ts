@@ -1,7 +1,9 @@
 import { FixedIncomeTaxes } from "../types";
 
 export function getIofPercent(days: number): number {
-	if (days > 30) return 0;
+	// Enunciado: IOF incide sobre o rendimento nos primeiros 30 dias.
+	// Tabela do PDF: dia 29 = 12%, dia 30+ = 0% (isento).
+	if (days >= 30) return 0;
 	// Regra do enunciado: IOF% = 96 - ((dias - 1) * 3), até 30 dias.
 	// Ex.: dia 1 = 96, dia 10 = 69, dia 29 = 12, dia 30 = 0
 	const pct = 96 - (days - 1) * 3;

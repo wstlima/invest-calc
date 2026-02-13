@@ -5,10 +5,13 @@ import { beforeAll, beforeEach } from "vitest";
 // Test DB isolado
 const TEST_DB = "/tmp/invest-calc.test.db";
 
-beforeAll(() => {
-	process.env.NODE_ENV = "test";
-	process.env.DATABASE_URL = `file:${TEST_DB}`;
+// IMPORTANT: vitest `setupFiles` roda antes do carregamento dos arquivos de teste,
+// mas `beforeAll` roda depois. O PrismaClient pode ser instanciado durante o import
+// dos módulos (antes de `beforeAll`), então precisamos setar o DATABASE_URL aqui.
+process.env.NODE_ENV = "test";
+process.env.DATABASE_URL = `file:${TEST_DB}`;
 
+beforeAll(() => {
 	// garante DB limpo
 	try {
 		rmSync(TEST_DB);
